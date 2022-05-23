@@ -35,6 +35,7 @@ bot.on("callback_query", async (ctx) => {
   const userId = ctx.callbackQuery.from.id;
   const callbackData = ctx.callbackQuery.data;
   const [event, ...args] = callbackData.split(" ");
+  ctx.editMessageReplyMarkup({ reply_markup: [] });
 
   switch (event) {
     case EVENT_TYPES.vote:
