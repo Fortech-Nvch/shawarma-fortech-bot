@@ -6,10 +6,14 @@ services:
       context: .
     working_dir: /app
     restart: unless-stopped
+    env_file:
+      - .env
     depends_on:
       - db
     environment:
       - NODE_ENV=production
+    networks:
+      - tg-bot-network
 
   db:
     image: postgres:12
@@ -20,9 +24,18 @@ services:
       - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
       - database:/var/lib/postgresql/data
+    expose:
+    - "${DB_PORT}"
     ports:
-      - '5432:${DB_PORT}'
+      - '${DB_PORT}:5432'
+    command: -p ${DB_PORT}
+    networks:
+      - tg-bot-network
 
 volumes:
   database:
     driver: local
+
+networks:
+  tg-bot-network:
+    driver: bridge
