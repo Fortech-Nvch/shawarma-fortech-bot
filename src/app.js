@@ -1,16 +1,19 @@
 const { Telegraf, Markup } = require("telegraf");
 const { botApiKey } = require("./const/config");
-const { vote, getPlaceByID, getAllPlaces } = require("./libs/Rating");
+const { vote, getPlaceByID, getAllPlaces, addUserIfNotExists, findFirstTenUsers } = require("./libs/Rating");
 
 const bot = new Telegraf(botApiKey);
 
 const EVENT_TYPES = {
   vote: "vote",
   information: "information",
+  user: "user"
 };
 
 bot.command("start", async (ctx) => {
   const places = await getAllPlaces();
+
+  await addUserIfNotExists(ctx.message.from);
 
   const buttons = Markup.inlineKeyboard(
     places.map((place) =>
@@ -22,6 +25,22 @@ bot.command("start", async (ctx) => {
   ctx.replyWithMarkdown(
     "Выберите место, чтобы узнать подробную информацию о нем",
     buttons
+  );
+});
+
+bot.command("users", async (ctx) => {
+  const users = await findFirstTenUsers();
+
+  const userButtons = Markup.inlineKeyboard(
+    users.map((user) =>
+      Markup.button.callback(user.username, `user ${user.id}`)
+    ),
+    { columns: 1 }
+  );
+
+  ctx.replyWithMarkdown(
+    "Список пользователей",
+    userButtons
   );
 });
 
@@ -39,6 +58,8 @@ bot.on("callback_query", async (ctx) => {
   switch (event) {
     case EVENT_TYPES.vote:
       {
+        ctx.editMessageReplyMarkup({ reply_markup: [] });
+
         const [placeId, userVote] = args;
 
         await vote(userId, placeId, userVote);
@@ -49,12 +70,17 @@ bot.on("callback_query", async (ctx) => {
 
     case EVENT_TYPES.information:
       {
+        ctx.editMessageReplyMarkup({ reply_markup: [] });
+
         const [placeId] = args;
 
         result = await getPlaceByID(placeId);
 
         ctx.replyWithHTML(result.formattedPlace, result.buttons);
       }
+      break;
+
+    case EVENT_TYPES.user:
       break;
 
     default: {

@@ -1,4 +1,4 @@
-const { Vote, Place } = require("./models");
+const { Vote, Place, User } = require("./models");
 const connection = require("../../database/connection");
 const { searchPlacesByQuery } = require("../../libs/PlacesAPI");
 const {
@@ -77,4 +77,17 @@ async function getAllPlaces() {
   return places;
 }
 
-module.exports = { vote, getPlaceByID, getAllPlaces };
+async function addUserIfNotExists(userParams) {
+  const user = await User.findOne({ where: { id: userParams.id } });
+
+  if (!user) {
+    await User.create(userParams);
+  }
+}
+
+async function findFirstTenUsers() {
+  const users =await User.findAll({ attributes:['id', 'username'], limit: 10, order: [['createdAt', 'ASC']] });
+  return users.map(user => user.dataValues);
+}
+
+module.exports = { vote, getPlaceByID, getAllPlaces, addUserIfNotExists, findFirstTenUsers };
