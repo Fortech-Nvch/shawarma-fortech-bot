@@ -44,12 +44,6 @@ bot.command("users", async (ctx) => {
   );
 });
 
-bot.command("bonus", async (ctx) => {
-  ctx.reply(
-    "Для получения сертификата на шаурму, напишите Саше с кодом 123123"
-  );
-});
-
 bot.on("callback_query", async (ctx) => {
   const userId = ctx.callbackQuery.from.id;
   const callbackData = ctx.callbackQuery.data;
