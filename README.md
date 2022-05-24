@@ -41,16 +41,5 @@
   - Бот спросит вас как назвать нового бота. Придумайте и напишите.
   - Далее нужно ввести ник бота, что бы он заканчивался нa слово bot.
 - **GOOGLE_MAP_KEY:** [Руководство как получить Google Map Key](https://help.flexbe.ru/api-google-maps/)
-- **DB_PASSWORD, DB_HOST, DB_NAME, DB_USER_NAME:** <a href="#bd-connection">Данные для подключения PostgreSQL</a>
-
-<h3 id="bd-connection">Данные для подключения PostgreSQL</h3>
-
-1. Зарегистрируйтесь на сайте https://www.heroku.com/
-2. Создайте новое приложение
-   ![alt text](public/new_app.png 'Новое приложение')
-3. перейдите в него и во вкладке `Resources` в поле ввода найдте Add-on `Heroku Postgres`. В результате должно выглядеть так.
-   ![alt text](public/add_on.png 'Heroku PostreSQL Add-on')
-
-4. Нажмите на этот Add-on и перейдите страницу настройки Heroku Postgress и перейдите во вкладку `Settings` и нажмите на кнопку `View Credentials...`
-   ![alt text](public/db_cred.png 'Heroku PostreSQL Add-on')
-5. Запишите недостающие данные в поля **DB_PASSWORD, DB_HOST, DB_NAME, DB_USER_NAME** в файл `.env`:
+- **DB_PASSWORD, DB_HOST, DB_NAME, DB_USER_NAME:**
+Хост, пользователь, пароль и название базы данных Postgres
